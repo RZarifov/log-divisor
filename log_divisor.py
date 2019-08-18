@@ -104,8 +104,3 @@ class LogDivisor(object):
             for key, file in list(self.log_subfiles.items()):
                 file.close()
                 self.log_subfiles.pop(key)
-
-
-if __name__ == '__main__':
-    ld = LogDivisor('test_files/corrupt.log')
-    ld.divide_month_wise()
