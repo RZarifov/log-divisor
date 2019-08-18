@@ -1,10 +1,26 @@
-A big log file, containing a strings of the format <date> <str> <str>, where date - is a date in format "yyyy-mm-dd: hh:mm:ss".
-The task is to make a class that analyses such a file, dividing the log file into the subfiles, where each subfile containing log entries for specific month or a year.
-The result is a library.
+__Description:__
+A library for analyzing and splitting the large log file into smaller, manageable chunks, for respective year, month, day.
 
+__Dependencies:__
+None
+
+__Usage:__
+from log_divisor improt LogDivisor as LD
+ld = LD("path_to_log/file.log")
+ld.divide_log_file("path_to_save_the_split_logs") # argument is optional. By default it outputs the split files next to the processed log file.
+
+__Supported formats:__
+The default, and only format for this version is '%Y-%m-%d %H:%M:%S'
+If the user wants to process the log file in different format, he should instance the DATE_FORMAT,
+by providing both time format and the regex format. The arguments for the instance are: time_strp and date_regex respectively
+The The default representation of both is:
+date_regex = r'(\d+-\d+-\d+ \d+:\d+:\d+)',
+time_strp = '%Y-%m-%d %H:%M:%S'
+
+*Possible future enhancement*: Guessing the regex format from the time_strp format, freeing the user from the necessity to provide one.
+
+__TODOs:__
+TODO: Get rid of the custom regex format, deduce it from the time format \
 TODO: Rewrite it to be async \
-TODO: Multiple formats in regular expressions \
-TODO: Configs for formats \
-TODO: pip install \
-TODO: comments \
-TODO: README DESCRIPTION \
+TODO: Multiple formats support out of the box \
+TODO: pypi

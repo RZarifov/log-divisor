@@ -30,6 +30,24 @@ class WISENESS(Flag):
     YMD = Y | M | D
 
 
+class DATE_FORMAT:
+    """
+    Date formats representation.
+    If a user wants to supply different formats for the log,
+    he must instance this class.
+
+    The default formats are:
+        date_re = r'(\d+-\d+-\d+ \d+:\d+:\d+)'
+            used in matching the log date in log entry
+        date_strp = '%Y-%m-%d %H:%M:%S'
+            used in datetime date management.
+    """
+    def __init__(self, date_strp = '%Y-%m-%d %H:%M:%S',
+            date_re = r'(\d+-\d+-\d+ \d+:\d+:\d+)'):
+        self.strp = date_strp
+        self.re = re.compile(date_re)
+
+
 logger = getLogger(__name__)
 
 
@@ -68,17 +86,18 @@ class LogDivisor(object):
             under the respective year and month the day belongs to.
 
     """
-    date_re = re.compile(r'(\d+-\d+-\d+ \d+:\d+:\d+)')
+    date_frm = DATE_FORMAT()
 
     def __init__(self, log_file_path,
             save_folder_path = None,
-            date_format_re = None):
-            """
-            save_folder_path = provide a custom folder to save split logs into.
-            date_format_re = currently unused and not tested argument.
-            """
-        if date_format_re:
-            self.date_re = date_format_re
+            custom_formats = None):
+        """
+        save_folder_path = provide a custom folder to save split logs into.
+        custom_date_formats = provide custom date formats.
+            Must be an instance of DATE_FORMAT.
+        """
+        if custom_formats:
+            self.date_frm = custom_formats
 
         self.log_file_path = log_file_path
         self.filename, _ = os.path.splitext(log_file_path)
@@ -101,11 +120,11 @@ class LogDivisor(object):
             exit(1)
 
     def _get_subfile_name(self, line, wiseness):
-        match = self.date_re.search(line)
+        match = self.date_frm.re.search(line)
         if match:
             matchDate = match.group(1)
             try:
-                dt = datetime.strptime(matchDate, '%Y-%m-%d %H:%M:%S')
+                dt = datetime.strptime(matchDate, self.date_frm.strp)
             except ValueError:
                 return self._get_corrupt_entries_file_path()
 
@@ -190,56 +209,70 @@ class LogDivisor(object):
 
         self.log_subfiles[subfile_name].write(line)
 
-    def divide_log_file(self):
+    def divide_log_file(self, save_folder_path = None):
         """
         The default method.
         The purpose is to split a large log file into smaller log files,
         yearly, monthly and daily-wise.
         """
+        if save_folder_path:
+            self.save_folder_path = save_folder_path
         self._divide_file(WISENESS.YMD)
 
-    def divide_year_and_month_wise(self):
+    def divide_year_and_month_wise(self, save_folder_path = None):
         """
         Works about the same as the default method,
         yet skips splitting a provided log into daily logs.
         """
+        if save_folder_path:
+            self.save_folder_path = save_folder_path
         self._divide_file(WISENESS.YM)
 
-    def divide_year_and_day_wise(self):
+    def divide_year_and_day_wise(self, save_folder_path = None):
         """
         Works about the same as the default method,
         yet skips splitting a provided log into monthly logs.
         """
+        if save_folder_path:
+            self.save_folder_path = save_folder_path
         self._divide_file(WISENESS.YD)
 
-    def divide_month_and_day_wise(self):
+    def divide_month_and_day_wise(self, save_folder_path = None):
         """
         Works about the same as the default method,
         yet skips splitting a provided log into yearly logs.
         """
+        if save_folder_path:
+            self.save_folder_path = save_folder_path
         self._divide_file(WISENESS.MD)
 
-    def divide_year_wise(self):
+    def divide_year_wise(self, save_folder_path = None):
         """
         Split provided log file into smaller logs,
         each for the individual year represented in the provided log.
         """
+        if save_folder_path:
+            self.save_folder_path = save_folder_path
         self._divide_file(WISENESS.Y)
 
-    def divide_month_wise(self):
+    def divide_month_wise(self, save_folder_path = None):
         """
         Split provided log file into smaller logs,
         each for the individual month represented in the provided log,
         under the respective year the month belongs to.
         """
+        if save_folder_path:
+            self.save_folder_path = save_folder_path
         self._divide_file(WISENESS.M)
 
-    def divide_day_wise(self):
+    def divide_day_wise(self, save_folder_path = None):
         """
         Split the provided log file into smaller logs,
         each for the individual day represented in the provided log,
         under the respective year and month the day belongs to.
         """
+        if save_folder_path:
+            self.save_folder_path = save_folder_path
         self._divide_file(WISENESS.D)
 
 

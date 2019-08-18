@@ -5,9 +5,14 @@ import shutil
 
 from log_divisor import LogDivisor, WISENESS
 
-"""
+
 class UnusedTestCases(unittest.TestCase):
-    def test_open(self):
+    """
+    The unused test cases. They supposed to mock the file reading and writing
+    operations, removing the need to work with the actual files.
+    The idea behind these test cases abandoned due to the time constraints.
+    """
+    def _test_open(self):
         m = unittest.mock.mock_open()
         with unittest.mock.patch('tests.open', m):
             with open('foo', 'w') as h:
@@ -17,7 +22,7 @@ class UnusedTestCases(unittest.TestCase):
         handle = m()
         handle.write.assert_called_once_with('some stuff')
 
-    def test_read(self):
+    def _test_read(self):
         with unittest.mock.patch('tests.open',
                 unittest.mock.mock_open(read_data='bibble')) as m:
             with open('foo') as h:
@@ -25,7 +30,7 @@ class UnusedTestCases(unittest.TestCase):
         m.assert_called_once_with('foo')
         assert result == 'bibble'
 
-    def test_opening_file(self):
+    def _test_opening_file(self):
         log_line = "2018-01-01 19:49:16: many example match now clean rock favor interest sister three"
 
         with unittest.mock.patch('log_divisor.open',
@@ -33,7 +38,7 @@ class UnusedTestCases(unittest.TestCase):
             ld = LogDivisor('log_file.log')
         m.assert_called_once_with('log_file.log', 'r')
 
-    def test_writing_to_split_files(self):
+    def _test_writing_to_split_files(self):
         m = unittest.mock.mock_open()
         with unittest.mock.patch('log_divisor.open', m):
             ld = LogDivisor('log_file.log')
@@ -44,9 +49,13 @@ class UnusedTestCases(unittest.TestCase):
         m.assert_called_with('log_file.log', 'r')
         handle = m()
         #handle.write.assert_called_once_with('some stuff')
-"""
+
 
 class BasicLogTests(unittest.TestCase):
+    """
+    The test cases to test WISENESS Flag attribute,
+    as well as basic one line log file.
+    """
     def test_ymd_wiseness(self):
         wiseness = WISENESS.YMD
         self.assertTrue(wiseness & WISENESS.Y == WISENESS.Y)
