@@ -186,15 +186,16 @@ class LogDivisor(object):
 
     def _divide_file(self, wiseness):
         for line in self.log_file:
+            files_to_write = set()
             if wiseness & WISENESS.Y == WISENESS.Y:
-                subfile_name = self._get_subfile_name(line, WISENESS.Y)
-                self._write_to_sublog_file(subfile_name, line)
+                files_to_write.add(self._get_subfile_name(line, WISENESS.Y))
             if wiseness & WISENESS.M == WISENESS.M:
-                subfile_name = self._get_subfile_name(line, WISENESS.M)
-                self._write_to_sublog_file(subfile_name, line)
+                files_to_write.add(self._get_subfile_name(line, WISENESS.M))
             if wiseness & WISENESS.D == WISENESS.D:
-                subfile_name = self._get_subfile_name(line, WISENESS.D)
-                self._write_to_sublog_file(subfile_name, line)
+                files_to_write.add(self._get_subfile_name(line, WISENESS.D))
+
+            self._write_to_sublog_files(files_to_write, line)
+
         else:
             self.log_file.seek(0)
 
@@ -202,10 +203,11 @@ class LogDivisor(object):
                 file.close()
                 self.log_subfiles.pop(key)
 
-    def _write_to_sublog_file(self, subfile_name, line):
-        self._check_directory(subfile_name)
-        if not self.log_subfiles[subfile_name]:
-            self.log_subfiles[subfile_name] = open(subfile_name, "w+")
+    def _write_to_sublog_files(self, files_to_write, line):
+        for subfile_name in files_to_write:
+            self._check_directory(subfile_name)
+            if not self.log_subfiles[subfile_name]:
+                self.log_subfiles[subfile_name] = open(subfile_name, "w+")
 
         self.log_subfiles[subfile_name].write(line)
 
@@ -277,5 +279,5 @@ class LogDivisor(object):
 
 
 if __name__ == "__main__":
-    ld = LogDivisor("test_files/sample_large.log", save_folder_path="olo/trololo")
+    ld = LogDivisor("test_files/corrupt.log", save_folder_path="olo/trololo")
     ld.divide_day_wise()
