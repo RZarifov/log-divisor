@@ -8,6 +8,19 @@ from enum import Flag, auto
 
 
 class WISENESS(Flag):
+    """
+    THE WISENESS FLAG
+    A convenient way to represent one of seven possible states of operation.
+    Y stands for a Year;
+    M stands for a Month;
+    D stands for a Day.
+
+    The idea behind this lies within the desire to parse the single log file
+    in one pass, yet splitting only in required specification.
+    For example when we need to split the log file only yearly and daily,
+    skipping monthly split. For this particular example we just use
+    an object that represents WISENESS.YD
+    """
     Y = auto()
     M = auto()
     D = auto()
@@ -21,11 +34,49 @@ logger = getLogger(__name__)
 
 
 class LogDivisor(object):
+    """
+    Log Divisor Class.
+    Provides a functionality to split large log files into more usable
+    log chunks, each representing a single year, month, day, respectively.
+
+    The instance of the class must be supplied with the path to a log file.
+    Also there is an optional \"save folder path\" argument.
+
+    The methods are:
+        divide_log_file             -   The default method.
+            The purpose is to split a large log file into smaller log files,
+            yearly, monthly and daily-wise.
+
+        divide_year_and_month_wise  -   Works about the same as the default
+            method, yet skips splitting a provided log into daily logs.
+
+        divide_year_and_day_wise    -   Works about the same as the default
+            method, yet skips splitting a provided log into monthly logs.
+
+        divide_month_and_day_wise   -   Works about the same as the default
+            method, yet skips splitting a provided log into yearly logs.
+
+        divide_year_wise            -   Split provided log file into smaller
+            logs, each for the individual year represented in the provided log.
+
+        divide_month_wise           -   Split provided log file into smaller
+            logs, each for the individual month represented in the provided log,
+            under the respective year the month belongs to.
+
+        divide_day_wise             -   Split the provided log file into smaller
+            logs, each for the individual day represented in the provided log,
+            under the respective year and month the day belongs to.
+
+    """
     date_re = re.compile(r'(\d+-\d+-\d+ \d+:\d+:\d+)')
 
-    def __init__(self, log_file_path, 
+    def __init__(self, log_file_path,
             save_folder_path = None,
             date_format_re = None):
+            """
+            save_folder_path = provide a custom folder to save split logs into.
+            date_format_re = currently unused and not tested argument.
+            """
         if date_format_re:
             self.date_re = date_format_re
 
@@ -140,24 +191,55 @@ class LogDivisor(object):
         self.log_subfiles[subfile_name].write(line)
 
     def divide_log_file(self):
+        """
+        The default method.
+        The purpose is to split a large log file into smaller log files,
+        yearly, monthly and daily-wise.
+        """
         self._divide_file(WISENESS.YMD)
 
     def divide_year_and_month_wise(self):
+        """
+        Works about the same as the default method,
+        yet skips splitting a provided log into daily logs.
+        """
         self._divide_file(WISENESS.YM)
 
     def divide_year_and_day_wise(self):
+        """
+        Works about the same as the default method,
+        yet skips splitting a provided log into monthly logs.
+        """
         self._divide_file(WISENESS.YD)
 
     def divide_month_and_day_wise(self):
+        """
+        Works about the same as the default method,
+        yet skips splitting a provided log into yearly logs.
+        """
         self._divide_file(WISENESS.MD)
 
     def divide_year_wise(self):
+        """
+        Split provided log file into smaller logs,
+        each for the individual year represented in the provided log.
+        """
         self._divide_file(WISENESS.Y)
 
     def divide_month_wise(self):
+        """
+        Split provided log file into smaller logs,
+        each for the individual month represented in the provided log,
+        under the respective year the month belongs to.
+        """
         self._divide_file(WISENESS.M)
 
     def divide_day_wise(self):
+        """
+        Split the provided log file into smaller logs,
+        each for the individual day represented in the provided log,
+        under the respective year and month the day belongs to.
+        """
         self._divide_file(WISENESS.D)
 
 
