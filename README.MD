@@ -14,10 +14,10 @@ ld.divide_log_file("path_to_save_the_split_logs") # argument is optional.
 ```
 
 __Supported formats:__\
-The default, and only format for this version is '%Y-%m-%d %H:%M:%S'
+The default, and only format for this version is ```'%Y-%m-%d %H:%M:%S'```\
 If the user wants to process the log file in different format, he should instance the DATE_FORMAT,
-by providing both time format and the regex format. The arguments for the instance are: time_strp and date_regex respectively
-The The default representation of both is:
+by providing both time format and the regex format. The arguments for the instance are: time_strp and date_regex respectively.\
+The default representation of both is:
 ```python
 date_regex = r'(\d+-\d+-\d+ \d+:\d+:\d+)',
 time_strp = '%Y-%m-%d %H:%M:%S'
