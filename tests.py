@@ -3,7 +3,7 @@ import unittest
 import os
 import shutil
 
-from log_divisor import LogDivisor
+from log_divisor import LogDivisor, WISENESS
 
 """
 class UnusedTestCases(unittest.TestCase):
@@ -47,28 +47,55 @@ class UnusedTestCases(unittest.TestCase):
 """
 
 class BasicLogTests(unittest.TestCase):
+    def test_ymd_wiseness(self):
+        wiseness = WISENESS.YMD
+        self.assertTrue(wiseness & WISENESS.Y == WISENESS.Y)
+        self.assertTrue(wiseness & WISENESS.M == WISENESS.M)
+        self.assertTrue(wiseness & WISENESS.D == WISENESS.D)
+
+    def test_ym_wiseness(self):
+        wiseness = WISENESS.YM
+        self.assertTrue(wiseness & WISENESS.Y == WISENESS.Y)
+        self.assertTrue(wiseness & WISENESS.M == WISENESS.M)
+        self.assertFalse(wiseness & WISENESS.D == WISENESS.D)
+
+    def test_yd_wiseness(self):
+        wiseness = WISENESS.YD
+        self.assertTrue(wiseness & WISENESS.Y == WISENESS.Y)
+        self.assertFalse(wiseness & WISENESS.M == WISENESS.M)
+        self.assertTrue(wiseness & WISENESS.D == WISENESS.D)
+
+    def test_m_wiseness(self):
+        wiseness = WISENESS.M
+        self.assertFalse(wiseness & WISENESS.Y == WISENESS.Y)
+        self.assertTrue(wiseness & WISENESS.M == WISENESS.M)
+        self.assertFalse(wiseness & WISENESS.D == WISENESS.D)
+
     def test_writing_an_actual_log(self):
         test_file = "test_files/one_line.log"
         test_file_folder, _ = os.path.splitext(test_file)
 
         output_yearly_file = os.path.join(test_file_folder, "2018.log")
         output_monthly_file = os.path.join(test_file_folder, "2018/Jan.log")
+        output_daily_file = os.path.join(test_file_folder, "2018/Jan/01.log")
 
         log_line = "2018-01-01 19:49:16: many example match now clean rock favor interest sister three"
 
         try:
-            ld = LogDivisor(test_file, once=True)
+            ld = LogDivisor(test_file)
             ld.divide_log_file()
 
             with open(output_yearly_file, 'r') as f:
                 yearly_text = f.read()
-            
+
             with open(output_monthly_file, 'r') as f:
                 monthly_text = f.read()
 
+            with open(output_daily_file, 'r') as f:
+                daily_text = f.read()
         finally:
-            os.remove(output_yearly_file)
             shutil.rmtree(test_file_folder)
         
         self.assertEqual(log_line, yearly_text)
         self.assertEqual(log_line, monthly_text)
+        self.assertEqual(log_line, daily_text)
