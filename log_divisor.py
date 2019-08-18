@@ -84,7 +84,6 @@ class LogDivisor(object):
         divide_day_wise             -   Split the provided log file into smaller
             logs, each for the individual day represented in the provided log,
             under the respective year and month the day belongs to.
-
     """
     date_frm = DATE_FORMAT()
 
@@ -209,7 +208,7 @@ class LogDivisor(object):
             if not self.log_subfiles[subfile_name]:
                 self.log_subfiles[subfile_name] = open(subfile_name, "w+")
 
-                self.log_subfiles[subfile_name].write(line)
+            self.log_subfiles[subfile_name].write(line)
 
     def divide_log_file(self, save_folder_path = None):
         """
