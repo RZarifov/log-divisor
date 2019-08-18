@@ -209,7 +209,7 @@ class LogDivisor(object):
             if not self.log_subfiles[subfile_name]:
                 self.log_subfiles[subfile_name] = open(subfile_name, "w+")
 
-        self.log_subfiles[subfile_name].write(line)
+                self.log_subfiles[subfile_name].write(line)
 
     def divide_log_file(self, save_folder_path = None):
         """
@@ -279,5 +279,5 @@ class LogDivisor(object):
 
 
 if __name__ == "__main__":
-    ld = LogDivisor("test_files/corrupt.log", save_folder_path="olo/trololo")
-    ld.divide_day_wise()
+    ld = LogDivisor("test_files/one_line.log", save_folder_path="D:/olo/trololo")
+    ld.divide_log_file()
