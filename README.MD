@@ -7,7 +7,7 @@ None
 
 __Usage:__
 ```python
-from log_divisor improt LogDivisor as LD
+from log_divisor import LogDivisor as LD
 ld = LD("path_to_log/file.log")
 ld.divide_log_file("path_to_save_the_split_logs") # argument is optional.
 # By default it outputs the split files next to the processed log file.

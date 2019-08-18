@@ -7,6 +7,9 @@ from collections import defaultdict
 from enum import Flag, auto
 
 
+logger = getLogger(__name__)
+
+
 class WISENESS(Flag):
     """
     THE WISENESS FLAG
@@ -46,9 +49,6 @@ class DATE_FORMAT:
             date_re = r'(\d+-\d+-\d+ \d+:\d+:\d+)'):
         self.strp = date_strp
         self.re = re.compile(date_re)
-
-
-logger = getLogger(__name__)
 
 
 class LogDivisor(object):
